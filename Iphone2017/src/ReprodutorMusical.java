@@ -6,8 +6,10 @@ import java.util.Scanner;
 public class ReprodutorMusical {
 
     private int volume;
+    Iphone iphone = new Iphone();
     Scanner touch = new Scanner(System.in);
     private List<Musica> musicaLista = new ArrayList<>();
+    private List<Musica> musicasSelecionadas = new ArrayList<>();
     //Musica musica; 
     
     public ReprodutorMusical(int volume) {
@@ -27,10 +29,13 @@ public class ReprodutorMusical {
         // menu para selecionar música para tocar ou alterar o volume.
         System.out.println("1 - Selecionar música.\n2 - Volume.");
 
-        switch(touch.nextInt()){
+        switch(Integer.parseInt(touch.nextLine())){
             case 1:
-                
-                SelecionarMusica("One");
+                System.out.println(SelecionarMusica());
+                System.out.println("Volume: " + volume);
+                System.out.println("Pressione <ENTER> para voltar para o menu inicial...");
+                touch.nextLine();
+                iphone.inicio();
                 break;
 
             case 2: 
@@ -54,15 +59,26 @@ public class ReprodutorMusical {
     }
 
     // metódo de seleção da música.
-     public void SelecionarMusica(String musicaSelecionada){
+     public List<Musica> SelecionarMusica(){
+        System.out.println("Digite a música desejada.");
+        String musicaSelecionada = touch.nextLine();
             if(!musicaLista.isEmpty()){
-                for(Musica m : musicaLista)
-                    if(m.getMusica().equalsIgnoreCase(musicaSelecionada)){
-                        System.out.println("Tocando: "+ musicaSelecionada);  
-                        System.out.println("Volume: "+ volume);
-                    }                                  
-            }else
-                System.out.println("Lista vazia.");
+                do{
+                    for(Musica m : musicaLista)
+                        if(m.getMusica().equalsIgnoreCase(musicaSelecionada)){
+                            musicasSelecionadas.add(new Musica(m.getArtista(), m.getMusica()));
+                        } 
+                    System.out.println("Digite próxima música, ou tecle <ENTER> para sair...");
+                    musicaSelecionada = touch.nextLine();  
+                }while(!musicaSelecionada.isEmpty());
+                System.out.println("\n\n-----------------------------");
+                System.out.println("            TOCANDO...           ");
+                System.out.println("-----------------------------");      
+                return musicasSelecionadas;                      
+            }else{
+                System.out.println("Lista vazia.");                
+            }
+            return null;
     }
 
     // método que retorna a quantidade de músicas armazenadas.
